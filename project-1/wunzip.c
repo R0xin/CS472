@@ -31,11 +31,6 @@ int main(int argc, char *argv[]){
 				printf("%c",c);
 			}
 		}
-		/*if(ferror(fp)){
-			printf("wzip: cannot open file\n");
-			fclose(fp);
-			exit(1);
-		}*/
 		fclose(fp);
 	}
 	return 0;
