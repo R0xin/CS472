@@ -107,15 +107,20 @@ void executeCommands(char *args[], int args_num, FILE *out){
     }else{
         char path[BUFF_SIZE];
         if (searchPath(path, args[0]) == 0){
+             
             pid_t pid = fork();
             if (pid == -1){
                 printError();
             }
-            else if (pid == 0){
-                redirect(out);
+            else if (pid == 0){                    
+                redirect(out);                        
+                char *temp = args[0];
+                args[0] = strdup(path);
                 if (execv(path, args) == -1){
                     printError();
                 }
+                free(args[0]);
+                args[0] = temp;
             }else{
                 waitpid(pid, NULL, 0);
             }
