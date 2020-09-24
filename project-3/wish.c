@@ -2,7 +2,7 @@
 #include <stdlib.h>      
 #include <unistd.h>      
 #include <regex.h>       
-#include <pthread.h>     
+//#include <pthread.h>     
 #include <ctype.h>
 #include <string.h>
 
@@ -136,7 +136,7 @@ void *parseInput(void *arg){
     int args_num = 0;
     FILE *output = stdout;
     struct function_args *fun_args = (struct function_args *) arg;
-    char *commandLine = fun_args->command;
+    char *commandLine = arg;
     char *command = strsep(&commandLine, ">");
     if (command == NULL || *command == '\0'){
         printError();
@@ -144,15 +144,18 @@ void *parseInput(void *arg){
     }
 
     command = trim(command);
+    if(strncmp(command, "&", strlen(command)) == 0){
+        return NULL;
+    }
 
-    if (commandLine != NULL){
+    if(commandLine != NULL){
         regex_t reg;
-        if (regcomp(&reg, "\\S\\s+\\S", REG_EXTENDED) != 0){
+        if(regcomp(&reg, "\\S\\s+\\S", REG_EXTENDED) != 0){
             printError();
             regfree(&reg);
             return NULL;
         }
-        if (regexec(&reg, commandLine, 0, NULL, 0) == 0 || strstr(commandLine, ">") != NULL){
+        if(regexec(&reg, commandLine, 0, NULL, 0) == 0 || strstr(commandLine, ">") != NULL){
             printError();
             regfree(&reg);
             return NULL;
@@ -164,11 +167,11 @@ void *parseInput(void *arg){
         }
     }
     char **ap = args;
-    while ((*ap = strsep(&command, " \t")) != NULL){
-        if (**ap != '\0'){
+    while((*ap = strsep(&command, " \t")) != NULL){
+        if(**ap != '\0'){
             *ap = trim(*ap);
             ap++;
-            if (++args_num >= BUFF_SIZE){
+            if(++args_num >= BUFF_SIZE){
                 break;
             }
         }
@@ -202,21 +205,21 @@ int main(int argc, char *argv[]) {
         if ((nread = getline(&line, &linecap, in)) > 0){
             char *command;
             int commands_num = 0;
-            struct function_args args[BUFF_SIZE];
-
+            //struct function_args args[BUFF_SIZE];
+            parseInput(line);
             if (line[nread - 1] == '\n'){
                 line[nread - 1] = '\0';
             }
             char *temp = line;
             while ((command = strsep(&temp, "&")) != NULL){
                 if (command[0] != '\0'){
-                    args[commands_num++].command = strdup(command);
+                    //args[commands_num++].command = strdup(command);
                     if (commands_num >= BUFF_SIZE){
                         break;
                     }
                 }
             }
-            for (size_t i = 0; i < commands_num; i++){
+            /*for (size_t i = 0; i < commands_num; i++){
                 if(pthread_create(&args[i].thread, NULL, &parseInput, &args[i]) != 0){
                     printError();
                 }
@@ -229,7 +232,7 @@ int main(int argc, char *argv[]) {
                 if (args[i].command != NULL){
                     free(args[i].command);
                 }
-            }
+            }*/
         }
         else if (feof(in) != 0){
             atexit(clean);
