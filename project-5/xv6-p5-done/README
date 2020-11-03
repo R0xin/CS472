@@ -1,0 +1,21 @@
+For part one, 
+I  changed$ (LD) $ (LDFLAGS) -N -e main -Ttext 0 -o $@ $^ to change 0 to 0x1000.
+in exec.c I one of the sz variables to PGSIZE which is by default 4096 to load the next page.
+in vm.c, I changed a for loop in the function copyuvm to have i = pgsize for reasons similarly above. Add another or conditional to the If where it checks if the addr is equal to 0 for fetchint, then added an extra or conditional in line 70 of syscall.c to (uint)i == 0
+
+for part two:
+inside defs.h added to proc.c int mprotect(void *addr, int len);&
+int munprotect(void *addr, int len);
+
+defined both functions in syscall.h
+inside syscall.c, added declarations for both mprotect and munprotect
+in sysproc.c, added functions for both mprotect and munprotect, check conditional then return -1 if argint < 0.
+
+
+added system calls to user.h for mprotect and munprotect and same for usys.S
+
+in vm.c, function mprotect is checking if the length is less than ot greater than the length of a page, if so, it prints out an error and returns -1. Then, checks if the page is aligned, if not it reurns -1. then the function loops through each page getting the PTE in the current process's pgdir. Then it clears the writing bit making the page not writable. after the loop finishes, it then reloads the control register with the adress of the page directory.
+
+the munprotect does the opposite to the above function in which it sets the writing bit rather than clearing it making the page both readable and writable.
+
+
