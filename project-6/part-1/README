@@ -5,6 +5,6 @@ Then in Main we check if there is a file passed in, if not we print out the erro
 malloc a buffer to store our results
 find out how many files are going through the program
 for the first for loop we iterate through the number of files and then each time we pass it in and run the inner for loop
-mmap to store in the heap
+mmap to store in the heap and we compare the temp char to the character we currently hold.
 uses the function createResult to add total count and current character.
 then we write from heap to stdout
