@@ -1,0 +1,10 @@
+I paired programed with Andrew Hansel
+
+we made a struct and an array to hold all of our struct values.
+Then in Main we check if there is a file passed in, if not we print out the error code.
+malloc a buffer to store our results
+find out how many files are going through the program
+for the first for loop we iterate through the number of files and then each time we pass it in and run the inner for loop
+mmap to store in the heap
+uses the function createResult to add total count and current character.
+then we write from heap to stdout
