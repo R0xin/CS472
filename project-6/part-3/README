@@ -1,0 +1,22 @@
+I paired programed with Andrew Hansel
+
+we made a struct and an array to hold all of our struct values.
+Then in Main we check if there is a file passed in, if not we print out the error code.
+malloc a buffer to store our results
+find out how many files are going through the program
+for the first for loop we iterate through the number of files and then each time we pass it in and run the inner for loop
+mmap to store in the heap and we compare the temp char to the character we currently hold.
+uses the function createResult to add total count and current character.
+then we write from heap to stdout
+
+Part 2:
+
+I pair programmed with Andrew again for part 2
+
+we moved our inner for loop in to a seperate function. This handles counting the number of times a character is in the file. we also made 2 structs to contain the job information for the threads. In our main function, we still keep all the if statements that check whether there are enough args in the test for test 3, and then we store the contents in addr using malloc. We then malloc a new struct with the size of the job * the # of threads. the # of threads is the int value from the amount of CPUS found by using get_nprocs(). We then iterate through the job threads which finds chunks for the job. We handled if there are 5 jobs and only 4 threads, the modulus would be 1 so the extra job would be assigned to the first thread. In the second for loop in Main, we ait for all the threads to finish with the jobs. If the Buffer is not NULL meaning that results are already in the buffer, we add on to the buffer. We then realloc the buffer and copy the memory and continues until all threads are complete. Then we write out our final zip.   
+
+Part 3: 
+
+I pair programmed with Andrew yet again from part 3
+
+we moved the file reading into a producer funtion and changed the process function to be renamed consumer. We also edited the compression method and added the locks required for this structure to work. We made an enqueue and dequeue to help the program function with the PC structure which is pushed in from the process. Then it is removed from the queue in the consumer function. We also implemented global functions to help the threads work. The producer then makes jobs for threads based on the number of args minus the first arg. Like part 2, in the case of 5 jobs and 4 cpu, the extra job will be given to the first thread. The producer will then signal to the consumer when there is a job in queue. The consumer is very similar to our process function from part 2 where it reads the file and uses the struct to store output. when done the consumer will signal the producer. 
